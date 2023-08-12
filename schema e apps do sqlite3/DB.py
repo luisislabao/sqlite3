@@ -41,6 +41,25 @@ def menu(o = 0, id = 0, objeto = {}):
         con.commit()
         print(id)
 
+    elif o ==4:
+        cursor.execute("DROP TABLE [IF EXISTS] cesta")
+        con.commit()
+        
+        cursor.execute("""CREATE TABLE "cesta" (
+	        "id"	INTEGER NOT NULL DEFAULT 1 UNIQUE,
+	        "name"	TEXT,
+	        "type"	TEXT,
+	        "price"	REAL,
+	        "qnt"	INTEGER,
+	        PRIMARY KEY("id" AUTOINCREMENT)
+            );""")
+        con.commit()
+
+        for propriedade in objeto:
+            cursor.execute(f"INSERT INTO products (name, type, price, qnt) VALUES ('{registro['nome']}', '{registro['tipo']}','{registro['price']}','{registro['quantidade']}')")
+        con.commit()
+        
+
     # Close the DATABASE
     # elif o == 5:
     #     con.close()
