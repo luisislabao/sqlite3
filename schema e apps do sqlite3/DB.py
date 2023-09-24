@@ -6,8 +6,8 @@ cursor = con.cursor()
     
 def menu(o = 0, id = 0, objeto = {}):
     if o ==1:
-        cursor.execute("DROP TABLE products")
-        con.commit()
+        # cursor.execute("DROP TABLE products")
+        # con.commit()
         
         cursor.execute("""CREATE TABLE "products" (
 	        "id"	INTEGER NOT NULL DEFAULT 1 UNIQUE,
@@ -42,7 +42,7 @@ def menu(o = 0, id = 0, objeto = {}):
         print(id)
 
     elif o ==4:
-        cursor.execute("DROP TABLE [IF EXISTS] cesta")
+        cursor.execute("DROP TABLE cesta")
         con.commit()
         
         cursor.execute("""CREATE TABLE "cesta" (
@@ -55,8 +55,8 @@ def menu(o = 0, id = 0, objeto = {}):
             );""")
         con.commit()
 
-        for propriedade in objeto:
-            cursor.execute(f"INSERT INTO products (name, type, price, qnt) VALUES ('{registro['nome']}', '{registro['tipo']}','{registro['price']}','{registro['quantidade']}')")
+        for registro in objeto:
+            cursor.execute(f"INSERT INTO cesta (name, type, price, qnt) VALUES ('{registro['name']}', '{registro['type']}','{registro['price']}','{registro['qnt']}')")
         con.commit()
         
 

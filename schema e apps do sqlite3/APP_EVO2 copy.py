@@ -3,7 +3,9 @@ from flask_cors import CORS, cross_origin
 from DB import menu
 
 app = Flask(__name__) #Crio o aplicativo
-CORS(app)
+cors = CORS(app, resources={r"/foo": {"origins": "http://192.168.0.102:8080"}})
+app.config['CORS_HEADERS'] = 'Content-Type'
+
 
 
 #Import the table 'Products' of the CandyCakes_DB.db Database, like Dictionary  inside a list 'products'. 
@@ -16,16 +18,19 @@ for linha in db:
         if tipo == linha[2]:
             products[tipo].append({'ID': linha[0], 'nome': linha[1], 'tipo': linha[2], 'price': linha[3], 'quantidade': linha[4]})
 
-cesta = [{'und': 10, 'nome': 'Quindim', 'type': 'doces'},
-         {'und': 10, 'nome': 'Brigadeiro', 'type': 'doces'},
-         {'und': 10, 'nome': 'Brawnie', 'type': 'Bolos'}]
+cesta = [{"id":1,"name":"Bolo de Chocolate","Quantitie":0,"price":120.51,"imgID":"","categories":[{"id":1,"name":"Bolos"}]},
+                    {"id":2,"name":"Brownie","Quantitie":20,"price":45.5,"imgID":"","categories":[{"id":2,"name":"Bolos"}]},
+                     {"id":3,"name":"Brigadeiro","Quantitie":30,"price":45.5,"imgID":"","categories":[{"id":2,"name":"Doces"}]},
+                     {"id":4,"name":"Quindim","Quantitie":40,"price":45.5,"imgID":"","categories":[{"id":2,"name":"Doces"}]},
+                     {"id":4,"name":"Coca 250ml","Quantitie":10,"price":45.5,"imgID":"","categories":[{"id":2,"name":"Bebidas"}]},
+                     {"id":4,"name":"Pepsi 250ml","Quantitie":100,"price":45.5,"imgID":"","categories":[{"id":2,"name":"Bebidas"}]}]
         
 
 #comunicação entre os componentes do cliente
 @app.route('/cesta/', methods=['GET'])
 @cross_origin(origins=['http://192.168.0.102:8080'],
-               allow_headers=['access-control-allow-origin','Access-Control-Request-Headers', 'content-type'], 
-               methods=['GET', 'OPTIONS'])
+              allow_headers={'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'POST' 'OPTIONS', 'content-type': 'application/json'},
+              )
 def testebuscacesta():
       try: 
            return jsonify(cesta)
@@ -37,17 +42,16 @@ def testebuscacesta():
 
 
 
-
+# asd
 #recepção dos dados do pedido
 @app.route('/cesta/', methods=['POST'])
-@cross_origin(origins=['http://192.168.0.102:8080'],
-               allow_headers=['Access-Control-Allow-Methods','access-control-allow-origin','Access-Control-Request-Headers', 'content-type'], 
-               methods=['POST', 'OPTIONS'])
+@cross_origin(origin=['http://192.168.0.102:8080'],
+               headers=['Content-Type','Authorization'], 
+               methods=['GET', 'POST', 'OPTIONS'])
 def creabasketable():
-    data = request.get_json()
-    menu(4, 0, data)
-    menu(5)
+    data = [request.get_json()]
     print(data)
+    menu(4, 0, data)
     return 'OK!'
 
 
